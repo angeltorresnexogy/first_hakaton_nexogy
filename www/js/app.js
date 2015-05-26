@@ -6,11 +6,9 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'Controllers', 'Security'])
 
-.run(function($ionicPlatform, SecurityAuthFactory) {
+.run(function($ionicPlatform, $rootScope, $state, SecurityAuthFactory) {
   $ionicPlatform.ready(function() {
 
-    SecurityAuthFactory.isAuthenticated();
-    
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -20,6 +18,25 @@ angular.module('starter', ['ionic', 'Controllers', 'Security'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    // SecurityAuthFactory.authObj().$onAuth(function(authData) {
+    //     if(!authData){
+    //       $state.go('app.login');
+    //     }
+    // });
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
+      if(!SecurityAuthFactory.authObj().$getAuth() && toState.name !== 'app.login') {
+          event.preventDefault();
+          console.log('no autenticado');
+          $state.go('app.login');
+      }
+      else if(SecurityAuthFactory.authObj().$getAuth() && toState.name == 'app.login'){
+        event.preventDefault();
+      }
+
+    });
+
   });
 })
 
@@ -31,6 +48,26 @@ angular.module('starter', ['ionic', 'Controllers', 'Security'])
     abstract: true,
     templateUrl: "templates/menu.html",
     controller: 'BaseController'
+  })
+
+  .state('app.login', {
+    url: "/login",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/User/login.html",
+        controller: 'BaseController'
+      }
+    }
+  })
+
+  .state('app.home', {
+    url: "/home",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/home.html",
+        controller: 'HomeController'
+      }
+    }
   })
 
   .state('app.profile', {
@@ -63,6 +100,6 @@ angular.module('starter', ['ionic', 'Controllers', 'Security'])
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/home');
 
 });

@@ -9,14 +9,6 @@ angular
     var FB = $firebaseObject(ref);
 
 	  return {
-	  	isAuthenticated: function(){
-          alert('Comprobando la Autenticacion');
-	  			auth.$onAuth(function(authData) {
-    			if (!authData) {
-      				$rootScope.$broadcast('security.event.unauthenticated'); 
-    			}
-  			});
-	  	},
       authObj: function(){
         return auth;
       },
