@@ -4,6 +4,14 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
   $scope.loginData = {};
 
+  $scope.registerData = {
+    user: {
+      country_code: 'US'
+    }
+  };
+
+  $scope.showLoginForm = true;
+
   $scope.passwordLogin = function() {
     SecurityAuthFactory.authObj().$authWithPassword({
         email: $scope.loginData.email,
@@ -18,9 +26,36 @@ angular.module('Controllers', ['Security', 'Kandy'])
     });
   };
 
+
+  $scope.userRegister = function(){
+    SecurityAuthFactory.authObj().$createUser({
+      email: $scope.registerData.email,
+      password: $scope.registerData.password
+    }).then(function(userData) {
+
+      var userRef = SecurityAuthFactory.managerFB().$ref().child('/users');
+      
+      $scope.registerData.user.email = $scope.registerData.email;
+
+      userRef.child(userData.uid).set($scope.registerData.user);
+
+      return SecurityAuthFactory.authObj().$authWithPassword({
+        email: $scope.registerData.email,
+        password: $scope.registerData.password
+      });
+    }).then(function(authData) {
+        $state.go('app.home');
+    }).catch(function(error) {
+        console.log(error);
+        $ionicPopup.alert({
+          title: 'Registration failed',
+          template: 'Invalid arguments'
+        });
+    });
+  }
+
   $scope.logout = function(){
     SecurityAuthFactory.authObj().$unauth();
-    $state.go('app.login');
   }
 
 })

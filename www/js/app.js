@@ -19,11 +19,11 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
       StatusBar.styleDefault();
     }
 
-    // SecurityAuthFactory.authObj().$onAuth(function(authData) {
-    //     if(!authData){
-    //       $state.go('app.login');
-    //     }
-    // });
+    SecurityAuthFactory.authObj().$onAuth(function(authData) {
+         if(!authData){
+            $state.go('app.login');
+         }
+    });
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
       if(!SecurityAuthFactory.authObj().$getAuth() && toState.name !== 'app.login') {
