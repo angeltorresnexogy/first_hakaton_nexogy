@@ -1,4 +1,4 @@
-angular.module('Controllers', ['Security'])
+angular.module('Controllers', ['Security', 'Kandy'])
 
 .controller('BaseController', function($scope, $state, $ionicModal, $ionicPopup, $ionicHistory, SecurityAuthFactory) {
 
@@ -25,7 +25,7 @@ angular.module('Controllers', ['Security'])
 
 })
 
-.controller('HomeController', function($scope, $stateParams, $ionicHistory) {
+.controller('HomeController', function($scope, $stateParams, $ionicHistory, KandyManager) {
     $ionicHistory.clearHistory();
 })
 
