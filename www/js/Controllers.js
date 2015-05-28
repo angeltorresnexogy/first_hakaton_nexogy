@@ -97,7 +97,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
     
     SecurityAuthFactory.getUserAuth().then(function(data){
 
-        KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate);
+        KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
 
         KandyManager.logout();
     
@@ -139,6 +139,19 @@ angular.module('Controllers', ['Security', 'Kandy'])
         console.log('call terminated');
         $audioRingOut[0].pause();      
     };
+
+    var onCallIncoming = function(call){
+        console.log('call incoming');
+        console.log(call.getId()); 
+        $scope.call_id = call.getId();        
+        $audioRingIn[0].play();      
+    };  
+
+    var onCallAnswered = function(){
+        console.log('call answered');
+        $audioRingIn[0].pause();      
+        $audioRingOut[0].pause();         
+    };      
 
     $scope.init_call = function(){
       KandyManager.makeCall('simplelogin41@development.nexogy.com', true);
