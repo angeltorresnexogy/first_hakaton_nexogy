@@ -154,7 +154,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
     };      
 
     $scope.init_call = function(){
-      KandyManager.makeCall('simplelogin41@development.nexogy.com', true);
+      KandyManager.makeCall('simplelogin41@development.nexogy.com', false);
     };
 
     $scope.end_call = function(){
