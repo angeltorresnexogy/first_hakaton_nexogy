@@ -8,7 +8,9 @@ angular.module('Controllers', ['Security', 'Kandy'])
   //User register data
   $scope.registerData = {
     user: {
-      country_code: 'US'
+      kandy: {
+        country_code: 'US',
+      }
     }
   };
 
@@ -29,11 +31,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       password: password
     }).then(function(authData) {
 
-      SecurityAuthFactory.getUserAuth().then(function(data){
-        console.log(data);
-      });
-
-      $state.go('app.home');
+        $state.go('app.home');
 
     }).catch(function(error) {
       $ionicPopup.alert({
@@ -57,7 +55,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       KandyManager.kandyCreateUser(kandy_user_id, $scope.registerData.user.country_code, $scope.registerData.user.first_name, $scope.registerData.user.last_name).then(function(res){
           
           //Add user kandy passoword to user data
-          $scope.registerData.user.kandy.password = res.password;
+          $scope.registerData.user.kandy.password = res.user_password;
 
           //Create Firebase user
           $scope.registerData.user.email = $scope.registerData.email;
@@ -81,13 +79,10 @@ angular.module('Controllers', ['Security', 'Kandy'])
   }
 
   $scope.logout = function(){
+    KandyManager.logout();
     SecurityAuthFactory.authObj().$unauth();
   }
 
-})
-
-.controller('HomeController', function($scope, $stateParams) {
-    
 })
 
 .controller('ProfileController', function($scope, $stateParams) {
@@ -95,7 +90,81 @@ angular.module('Controllers', ['Security', 'Kandy'])
 })
 
 .controller('MessageController', function($scope, $stateParams) {
+
+})
     
+.controller('HomeController', function($scope, $stateParams, $state, $ionicHistory, KandyManager, SecurityAuthFactory) {
+    
+    SecurityAuthFactory.getUserAuth().then(function(data){
+
+        KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
+
+        KandyManager.logout();
+    
+        KandyManager.login(data.kandy.user_id, data.kandy.password);   
+        
+        $state.go('app.home');
+    });
+
+    $scope.call_id = '';
+
+    var onLoginSuccess = function(){
+        console.log('logged');
+        KandyAPI.Phone.updatePresence(0);   
+    };
+
+    var onLoginFailed = function(){
+        console.log('log failed');
+    };
+
+    var onCallInitiate = function(call){
+        console.log('call initiate');
+        console.log(call.getId());
+        $scope.call_id = call.getId();
+        $audioRingOut[0].play();
+    };
+
+    var onCallInitiateFail  = function(){
+        console.log('call initiate failed');
+    };
+
+    var onCall  = function(call){
+        console.log('call started');
+        console.log(call.getId()); 
+        $scope.call_id = call.getId();
+        $audioRingOut[0].pause();
+    };
+
+    var onCallTerminate  = function(){
+        console.log('call terminated');
+        $audioRingOut[0].pause();      
+    };
+
+    var onCallIncoming = function(call){
+        console.log('call incoming');
+        console.log(call.getId()); 
+        $scope.call_id = call.getId();        
+        $audioRingIn[0].play();      
+    };  
+
+    var onCallAnswered = function(){
+        console.log('call answered');
+        $audioRingIn[0].pause();      
+        $audioRingOut[0].pause();         
+    };      
+
+    $scope.init_call = function(){
+      KandyManager.makeCall('simplelogin41@development.nexogy.com', true);
+    };
+
+    $scope.end_call = function(){
+      KandyManager.endCall($scope.call_id);
+    };    
+
+    $scope.answer_call = function(){
+      KandyManager.answerCall($scope.call_id);
+    };    
+
 })
 
 .controller('PlaylistsCtrl', function($scope, SecurityAuthFactory, $firebaseArray) {

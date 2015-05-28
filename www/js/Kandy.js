@@ -26,14 +26,9 @@ angular
 	// 	};
 
 	kandyServices.kandyUserToken = function(user_id){
-  		return $http.get(KANDY_API_URL + 'domains/users/accesstokens?key=' + KANDY_DOMAIN_KEY + '&domain_api_secret=' + KANDY_DOMAIN_SECRET + '&user_id=' + user_id)	  			  		
-				.then(function (res) {
-					return res.data.result.user_access_token;
-				});
-	};
 
-	kandyServices.kandyDomainToken = function(){
-	  		return $http.get(KANDY_API_URL + 'domains/accesstokens?key=' + KANDY_DOMAIN_KEY + '&domain_api_secret=' + KANDY_DOMAIN_SECRET)	  		
+	  		// return $http.get(KANDY_API_URL + 'domains/users/accesstokens?key=' + KANDY_DOMAIN_KEY + '&user_id=angel&user_password=A1234567')	  		
+	  		return $http.get(KANDY_API_URL + 'domains/users/accesstokens?key=' + KANDY_DOMAIN_KEY + '&domain_api_secret=' + KANDY_DOMAIN_SECRET + '&user_id=' + user_id)	  			  		
 					.then(function (res) {
 
 						// if(res.data.status == 0)
@@ -45,9 +40,15 @@ angular
 						// }
 
 						// return false;
-						// return res.data.result.user_access_token;
-						return res.data.result.domain_access_token;
+						return res.data.result.user_access_token;
 					});
+		};
+
+	kandyServices.kandyDomainToken = function(){
+  		return $http.get(KANDY_API_URL + 'domains/accesstokens?key=' + KANDY_DOMAIN_KEY + '&domain_api_secret=' + KANDY_DOMAIN_SECRET)	  		
+			.then(function (res) {
+				return res.data.result.domain_access_token;
+			});
 		};		
 
 	kandyServices.kandyCreateUser = function(user_id, user_country_code, user_first_name, user_last_name, user_email, user_password){
@@ -64,7 +65,7 @@ angular
 
 				  		return $http.post(KANDY_API_URL + 'domains/users/user_id?key=' + res, params)	  		
 								.then(function (res) {
-									return res;
+									return res.data.result;
 								});				
 					});
 
@@ -86,6 +87,42 @@ angular
 
 
 		};
+
+
+	// KandyAPI.Phone.setup({
+	//   listeners: {
+	//     loginsuccess: kandyServices.login,
+	//     loginfailed: myLoginFailedFunction
+	//   }
+	// });
+
+	kandyServices.setup = function(outgoingVideo, incomingVideo, loginSuccessCallback, loginFailedCallback, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswer){
+							KandyAPI.Phone.setup({
+					          remoteVideoContainer: incomingVideo,
+					          localVideoContainer: outgoingVideo,
+							  listeners: {
+							    loginsuccess: loginSuccessCallback,
+							    loginfailed: loginFailedCallback,
+
+					            callinitiated: onCallInitiate,
+					            callinitiatefailed: onCallInitiateFail,
+					            oncall: onCall,
+					            callended: onCallTerminate,	
+            					callincoming: onCallIncoming,
+            					callanswered: onCallAnswer,            					
+							  }
+							});
+						}
+
+	kandyServices.login = function(user_id, password){ KandyAPI.Phone.login( KANDY_DOMAIN_KEY, user_id, password); };
+
+	kandyServices.logout = function(){ KandyAPI.Phone.logout(); }
+
+	kandyServices.makeCall = function(user_id, cameraOn){ KandyAPI.Phone.makeCall(user_id, cameraOn); }
+
+	kandyServices.endCall = function(callId){ KandyAPI.Phone.endCall(callId); }
+
+	kandyServices.answerCall = function(callId){ KandyAPI.Phone.answerCall(callId, true); }
 
 	return kandyServices;
   });

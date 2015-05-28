@@ -39,6 +39,7 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
       }
       else if(SecurityAuthFactory.authObj().$getAuth() && toState.name == 'app.login'){
         event.preventDefault();
+        $state.go('app.home');
       }
 
     });
@@ -126,6 +127,6 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/app/login');
 
 });
