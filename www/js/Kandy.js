@@ -45,21 +45,10 @@ angular
 		};
 
 	kandyServices.kandyDomainToken = function(){
-	  		return $http.get(KANDY_API_URL + 'domains/accesstokens?key=' + KANDY_DOMAIN_KEY + '&domain_api_secret=' + KANDY_DOMAIN_SECRET)	  		
-					.then(function (res) {
-
-						// if(res.data.status == 0)
-						// {
-							// console.log(res);
-							// $rootScope.kandy_access_token = res.data.result.account_access_token;
-							// return true;
-							// return res.data.result.account_access_token;
-						// }
-
-						// return false;
-						// return res.data.result.user_access_token;
-						return res.data.result.domain_access_token;
-					});
+  		return $http.get(KANDY_API_URL + 'domains/accesstokens?key=' + KANDY_DOMAIN_KEY + '&domain_api_secret=' + KANDY_DOMAIN_SECRET)	  		
+			.then(function (res) {
+				return res.data.result.domain_access_token;
+			});
 		};		
 
 	kandyServices.kandyCreateUser = function(user_id, user_country_code, user_first_name, user_last_name, user_email, user_password){
@@ -76,7 +65,7 @@ angular
 
 				  		return $http.post(KANDY_API_URL + 'domains/users/user_id?key=' + res, params)	  		
 								.then(function (res) {
-									return res;
+									return res.data.result;
 								});				
 					});
 
