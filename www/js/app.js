@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
 
-.run(function($ionicPlatform, $rootScope, $state, SecurityAuthFactory) {
+.run(function($ionicPlatform, $rootScope, $state, SecurityAuthFactory, $ionicHistory) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -26,6 +26,12 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
     });
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
+
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      });
+
       if(!SecurityAuthFactory.authObj().$getAuth() && toState.name !== 'app.login') {
           event.preventDefault();
           console.log('no autenticado');
@@ -76,6 +82,26 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
       'menuContent': {
         templateUrl: "templates/Profile/index.html",
         controller: 'ProfileController'
+      }
+    }
+  })
+
+  .state('app.messages', {
+    url: "/messages",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/Message/index.html",
+        controller: 'MessageController'
+      }
+    }
+  })
+
+  .state('app.message_compose', {
+    url: "/message/compose",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/Message/compose.html",
+        controller: 'MessageController'
       }
     }
   })
