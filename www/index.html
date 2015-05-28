@@ -5,6 +5,10 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
+    <!--Load Bootstrap CSS (optional)-->
+    <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
+    
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
@@ -12,9 +16,10 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <!-- Kandy libraries -->
     <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
-    <script src="https://kandy-portal.s3.amazonaws.com/public/javascript/fcs/3.0.0/fcs.js" ></script>
-    <script src="https://kandy-portal.s3.amazonaws.com/public/javascript/kandy/2.2.0/kandy.js" ></script>
+    <script src="https://kandy-portal.s3.amazonaws.com/public/javascript/fcs/3.0.4/fcs.js"></script>
+    <script src="https://kandy-portal.s3.amazonaws.com/public/javascript/kandy/2.2.2/kandy.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -35,5 +40,34 @@
 
   <body ng-app="starter">
     <ion-nav-view></ion-nav-view>
+
+    <script type="text/javascript">
+        var callId;
+
+        // Create audio objects to play incoming calls and outgoing calls sound
+        var $audioRingIn = $('<audio>', { loop: 'loop', id: 'ring-in' });
+        var $audioRingOut = $('<audio>', { loop: 'loop', id: 'ring-out' });
+
+        // Load audio source to DOM to indicate call events
+        var audioSource = {
+        ringIn: [
+          { src: 'https://kandy-portal.s3.amazonaws.com/public/sounds/ringin.mp3', type: 'audio/mp3' },
+          { src: 'https://kandy-portal.s3.amazonaws.com/public/sounds/ringin.ogg', type: 'audio/ogg' }
+          ],
+        ringOut: [
+          { src: 'https://kandy-portal.s3.amazonaws.com/public/sounds/ringout.mp3', type: 'audio/mp3' },
+          { src: 'https://kandy-portal.s3.amazonaws.com/public/sounds/ringout.ogg', type: 'audio/ogg' }]
+        };
+
+        audioSource.ringIn.forEach(function(entry) {
+        var $source = $('<source>').attr('src', entry.src);
+        $audioRingIn.append($source);
+        });
+
+        audioSource.ringOut.forEach(function(entry) {
+        var $source = $('<source>').attr('src', entry.src);
+        $audioRingOut.append($source);
+        });
+    </script> 
   </body>
 </html>

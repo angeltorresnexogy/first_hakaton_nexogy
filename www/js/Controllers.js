@@ -86,16 +86,65 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
 })
 
-.controller('HomeController', function($scope, $stateParams) {
-    
-})
-
 .controller('ProfileController', function($scope, $stateParams) {
     
 })
 
 .controller('MessageController', function($scope, $stateParams) {
+
+})
     
+.controller('HomeController', function($scope, $stateParams, $ionicHistory, KandyManager) {
+    $ionicHistory.clearHistory();
+
+    $scope.call_id = '';
+
+    var onLoginSuccess = function(){
+                        console.log('logged');
+                        KandyAPI.Phone.updatePresence(0);                        
+                      };
+
+    var onLoginFailed = function(){
+                        console.log('log failed');
+                      };
+
+    var onCallInitiate = function(call){
+                        console.log('call initiate');
+                        console.log(call.getId());
+                        $scope.call_id = call.getId();
+                        $audioRingOut[0].play();
+                      };
+
+    var onCallInitiateFail  = function(){
+                        console.log('call initiate failed');
+                      };
+
+    var onCall  = function(call){
+                        console.log('call started');
+                        console.log(call.getId()); 
+                        $scope.call_id = call.getId();
+                        $audioRingOut[0].pause();
+                      };
+
+    var onCallTerminate  = function(){
+                        console.log('call terminated');
+                        $audioRingOut[0].pause();                        
+                      };
+
+    KandyManager.setup($('#outgoing-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate);
+
+    KandyManager.logout();
+    
+    KandyManager.login('angel', 'A1234567');   
+
+    $scope.init_call = function(){
+      KandyManager.makeCall('user1@development.nexogy.com', true);
+    };
+
+    $scope.end_call = function(){
+      KandyManager.endCall($scope.call_id);
+      // console.log($scope.call_id);
+    };     
 })
 
 .controller('PlaylistsCtrl', function($scope, SecurityAuthFactory, $firebaseArray) {
