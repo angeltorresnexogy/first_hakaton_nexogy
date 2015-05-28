@@ -17,15 +17,18 @@
       <h1 class="title">Left</h1>
     </ion-header-bar>
     <ion-content>
-      <ion-list>
-        <ion-item nav-clear menu-close ng-click="logout()">
-          Logout
+      <ion-list id="left-menu-content">
+        <ion-item nav-clear menu-close href="#/app/home">
+          Home
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/profile">
           Profile
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/profile">
-          Test
+        <ion-item nav-clear menu-close href="#/app/messages">
+          Messages
+        </ion-item>
+        <ion-item nav-clear menu-close ng-click="logout()">
+          Logout
         </ion-item>
       </ion-list>
     </ion-content>

@@ -6,14 +6,32 @@ angular
 
 	  var ref = new Firebase(SECURITY_FIREBASE_PATH);
 	  var auth = $firebaseAuth(ref);
-    var FB = $firebaseObject(ref);
 
 	  return {
       authObj: function(){
         return auth;
       },
       managerFB: function(){
-        return FB;
+        return ref;
+      },
+      getUserAuth: function(){
+          if(auth.$getAuth()){
+
+            var refUserAuth = ref.child('/users/').child(auth.$getAuth().uid);
+
+            var objUserAuth = $firebaseObject(refUserAuth);
+
+            return objUserAuth.$loaded(function(data){
+                return data;
+            },
+            function(error) {
+              return null;
+            });
+          }
+          else
+          {
+            return null;
+          }
       }
 	  }
 }]);
