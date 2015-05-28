@@ -97,7 +97,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
     
     SecurityAuthFactory.getUserAuth().then(function(data){
 
-        KandyManager.setup($('#outgoing-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate);
+        KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate);
 
         KandyManager.logout();
     
@@ -146,7 +146,12 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
     $scope.end_call = function(){
       KandyManager.endCall($scope.call_id);
-    };     
+    };    
+
+    $scope.answer_call = function(){
+      KandyManager.answerCall($scope.call_id);
+    };    
+
 })
 
 .controller('PlaylistsCtrl', function($scope, SecurityAuthFactory, $firebaseArray) {
