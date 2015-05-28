@@ -93,7 +93,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
 })
     
-.controller('HomeController', function($scope, $stateParams, $state, $ionicHistory, KandyManager, SecurityAuthFactory) {
+.controller('HomeController', function($scope, $stateParams, $state, $ionicHistory, $ionicModal, KandyManager, SecurityAuthFactory) {
     
     SecurityAuthFactory.getUserAuth().then(function(data){
 
@@ -101,8 +101,8 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
         KandyManager.logout();
     
-        KandyManager.login(data.kandy.user_id, data.kandy.password);   
-        
+        KandyManager.login(data.kandy.user_id, data.kandy.password);
+
         $state.go('app.home');
     });
 
@@ -110,7 +110,8 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
     var onLoginSuccess = function(){
         console.log('logged');
-        KandyAPI.Phone.updatePresence(0);   
+        KandyAPI.Phone.updatePresence(0); 
+        loadAddressBook(); 
     };
 
     var onLoginFailed = function(){
@@ -151,7 +152,43 @@ angular.module('Controllers', ['Security', 'Kandy'])
         console.log('call answered');
         $audioRingIn[0].pause();      
         $audioRingOut[0].pause();         
-    };      
+    };     
+
+    var loadAddressBook = function(){
+        KandyManager.getAddressBook(addressBookCallback);  
+    }
+
+    var addressBookCallback = function(data){
+        $scope.addressBook = data;
+    };
+
+    $scope.showContactModal = function(){
+      $ionicModal.fromTemplateUrl('templates/Contact/add_contact_modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        $scope.modal = modal;
+        $scope.modal.show();
+      });
+
+      $scope.closeContactModal = function() {
+        $scope.modal.hide();
+      };
+
+      //Cleanup the modal when we're done with it!
+      $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+      });
+
+      // Execute action on hide modal
+      $scope.$on('modal.hidden', function() {
+        // Execute action
+      });
+      // Execute action on remove modal
+      $scope.$on('modal.removed', function() {
+        // Execute action
+      });
+    }
 
     $scope.init_call = function(){
       KandyManager.makeCall('simplelogin41@development.nexogy.com', true);
@@ -163,8 +200,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
     $scope.answer_call = function(){
       KandyManager.answerCall($scope.call_id);
-    };    
-
+    };
 })
 
 .controller('PlaylistsCtrl', function($scope, SecurityAuthFactory, $firebaseArray) {

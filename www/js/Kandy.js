@@ -9,22 +9,6 @@ angular
     
     var kandyServices = {};
 
-	// kandyServices.kandyLogin = function(){
-	//   		return $http.get(KANDY_API_URL + 'accounts/accesstokens?key=' + KANDY_ACCOUNT_KEY + '&account_api_secret=' + KANDY_ACCOUNT_SECRET)
-	// 				.then(function (res) {
-
-	// 					if(res.data.status == 0)
-	// 					{
-	// 						// $rootScope.kandy_access_token = res.data.result.account_access_token;
-	// 						// return true;
-	// 						return res.data.result.account_access_token;
-	// 					}
-
-	// 					// return false;
-	// 					return null;
-	// 				});
-	// 	};
-
 	kandyServices.kandyUserToken = function(user_id){
 
 	  		// return $http.get(KANDY_API_URL + 'domains/users/accesstokens?key=' + KANDY_DOMAIN_KEY + '&user_id=angel&user_password=A1234567')	  		
@@ -123,6 +107,10 @@ angular
 	kandyServices.endCall = function(callId){ KandyAPI.Phone.endCall(callId); }
 
 	kandyServices.answerCall = function(callId){ KandyAPI.Phone.answerCall(callId, true); }
+
+	kandyServices.getAddressBook = function(success){
+		KandyAPI.Phone.retrievePersonalAddressBook(success);
+	}
 
 	return kandyServices;
   });
