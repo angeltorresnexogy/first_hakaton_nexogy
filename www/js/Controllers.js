@@ -163,6 +163,9 @@ angular.module('Controllers', ['Security', 'Kandy'])
     };
 
     $scope.showContactModal = function(){
+
+      $scope.newContactData = {};
+
       $ionicModal.fromTemplateUrl('templates/Contact/add_contact_modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -188,6 +191,10 @@ angular.module('Controllers', ['Security', 'Kandy'])
       $scope.$on('modal.removed', function() {
         // Execute action
       });
+    }
+
+    $scope.saveContact  = function(){
+      console.log($scope.newContactData);
     }
 
     $scope.init_call = function(){
