@@ -1,0 +1,10 @@
+.icon-btn {
+	cursor: pointer;
+	padding-right: 10px!important;
+	font-size: 20px;
+	color: #948E8E;
+}
+
+.icon-btn:hover { 
+    color: black;
+}

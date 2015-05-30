@@ -108,8 +108,27 @@ angular
 
 	kandyServices.answerCall = function(callId){ KandyAPI.Phone.answerCall(callId, true); }
 
-	kandyServices.getAddressBook = function(success){
-		KandyAPI.Phone.retrievePersonalAddressBook(success);
+	kandyServices.getAddressBook = function(success){ KandyAPI.Phone.retrievePersonalAddressBook(success); }
+
+	kandyServices.sendIM = function(sendTo, content, type, successCallback, failedCallback){
+
+		successCallback = successCallback || null;
+		failedCallback = failedCallback || null;
+
+		switch(type)
+		{
+			case 'text': KandyAPI.Phone.sendIm(sendTo, content, successCallback, failedCallback);
+						 break;
+
+		}			
+	}
+
+	kandyServices.getIM = function(successCallback, failedCallback){
+
+		successCallback = successCallback || null;
+		failedCallback = failedCallback || null;
+
+		KandyAPI.Phone.getIm(successCallback, failedCallback);
 	}
 
 	return kandyServices;

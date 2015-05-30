@@ -24,6 +24,41 @@
 
 	<button class="btn btn-success" id="initialize-call-btn" ng-click="init_call()">Call</button>	
 	<button class="btn btn-success" id="initialize-end-btn" ng-click="end_call()">End Call</button>		
-  <button class="btn btn-success" id="answer-call-btn" ng-click="answer_call()">Answer Call</button> 
+	<button class="btn btn-success" id="answer-call-btn" ng-click="answer_call()">Answer Call</button> 
+
+	<div class="row padding-bottom">
+    <div id="conversation" class="col-80 col-offset-10 item item-input">
+         <ul>
+            <li ng-repeat="msg in messages" >
+              <p>{{msg.sender}}:&nbsp;{{msg.text}}</p>
+              <p ng-if="msg.ack == 1"><small><i>Received<i></small></p>
+            </li>
+        </ul>
+    </div>
+	</div>
+
+  	<div class="row">
+		<div class="col-80 col-offset-10 item item-input-wrapper">
+			<div class="row row-center">
+				<div class="col-10" style="text-align: right;">
+
+            <i onclick="angular.element('#image-file').trigger('click')" class="icon-btn icon ion-image" data-toggle="tooltip" data-placement="top" title="Upload Image"></i>
+            <input id="image-file" type="file" style="display: none;" ng-file-select="onImageSelect($files)" accept="image/*">            
+
+				    <i onclick="angular.element('#video-file').trigger('click')" class="icon-btn icon ion-videocamera" data-toggle="tooltip" data-placement="top" title="Upload Video"></i>            
+            <input id="video-file" type="file" style="display: none;" ng-file-select="onVideoSelect($files)" accept="video/*">            
+
+				</div>				
+				<div class="col">
+					<label class="item item-input">		        
+				  <input type="text" ng-model="message">		      	
+					</label>	
+				</div>	
+				<div class="col-10" style="text-align: center;">
+					<button class="btn btn-success icon-left ion-arrow-up-c" ng-click="send_im(message, 'text')" ng-disabled=" message == '' " >&nbsp;Send</button>
+				</div>
+			</div>
+		</div>
+  	</div>
   </ion-content>
 </ion-view>

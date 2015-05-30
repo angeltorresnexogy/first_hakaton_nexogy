@@ -111,7 +111,11 @@ angular.module('Controllers', ['Security', 'Kandy'])
     var onLoginSuccess = function(){
         console.log('logged');
         KandyAPI.Phone.updatePresence(0); 
-        loadAddressBook(); 
+        loadAddressBook();
+
+        setInterval(function(){
+            KandyManager.getIM(getIMSuccessCallback, getIMFailedCallback);
+        }, 1000); 
     };
 
     var onLoginFailed = function(){
@@ -191,7 +195,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       $scope.$on('modal.removed', function() {
         // Execute action
       });
-    }
+    };
 
     $scope.saveContact  = function(){
       console.log($scope.newContactData);
@@ -208,6 +212,75 @@ angular.module('Controllers', ['Security', 'Kandy'])
     $scope.answer_call = function(){
       KandyManager.answerCall($scope.call_id);
     };
+
+    $scope.messages = [];
+
+    var sendIMSuccessCallback = function(data){
+
+        $scope.messages.push({ sender: 'Me', text: data.message.text, ack: 0, uuid: data.UUID });
+        $scope.$apply();
+        console.log('message sent');
+    };
+
+    var sendIMFailedCallback = function(){
+        console.log('message failed');
+    };    
+
+    var getIMSuccessCallback = function(data){
+
+        if(data.messages.length > 0)
+        {
+          data.messages.forEach(function(msg){
+            
+            if(msg.messageType == 'chatRemoteAck')
+            {                        
+              var BreakException= {};
+
+              try {
+                  $scope.messages.forEach(function(elem) {
+                      if(elem.ack == 0) 
+                      {
+                        elem.ack = 1;
+                        throw BreakException;
+                      }
+                  });
+              } catch(e) {
+                  if (e!==BreakException) throw e;
+              }  
+                      
+              $scope.$apply();
+
+              console.log('message reception confirmed');
+            }
+            else
+            {
+              $scope.messages.push({ sender: msg.sender.user_id, text: msg.message.text, ack: 0 });
+              $scope.$apply();                
+              console.log('message received'); 
+            }          
+          });        
+        }
+    };
+
+    var getIMFailedCallback = function(){
+        console.log('message load failed');
+    };    
+
+    $scope.message = '';
+
+    $scope.send_im = function(content, type){ 
+
+      $scope.message = '';      
+      switch(type)
+      {  
+        case 'text': KandyManager.sendIM('simplelogin40@development.nexogy.com', content, 'text', sendIMSuccessCallback, sendIMFailedCallback); 
+                     break;
+      }
+    };
+
+    $scope.uploadImage = function(event){
+      console.log(event);
+    }
 })
 
 .controller('PlaylistsCtrl', function($scope, SecurityAuthFactory, $firebaseArray) {
