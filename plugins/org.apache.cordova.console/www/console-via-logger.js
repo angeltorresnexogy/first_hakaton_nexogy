@@ -191,4 +191,8 @@ require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'console', modu
 
 require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'console', module.exports);window.console = window.console || {};
 
+require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'console', module.exports);window.console = window.console || {};
+
+require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'console', module.exports);window.console = window.console || {};
+
 require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'console', module.exports);

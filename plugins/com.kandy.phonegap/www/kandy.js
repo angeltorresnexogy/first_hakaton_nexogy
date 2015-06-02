@@ -1668,10 +1668,3 @@ var Kandy = {
 };
 
 module.exports = Kandy;
-window.Kandy = window.Kandy || {};
-
-require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'Kandy', module.exports);window.Kandy = window.Kandy || {};
-
-require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'Kandy', module.exports);window.Kandy = window.Kandy || {};
-
-require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'Kandy', module.exports);

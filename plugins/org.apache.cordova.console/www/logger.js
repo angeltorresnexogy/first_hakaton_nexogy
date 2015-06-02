@@ -362,4 +362,10 @@ window.cordova.logger = window.cordova.logger || {};
 require('cordova/builder').assignOrWrapInDeprecateGetter(window.cordova, 'logger', module.exports);window.cordova = window.cordova || {};
 window.cordova.logger = window.cordova.logger || {};
 
+require('cordova/builder').assignOrWrapInDeprecateGetter(window.cordova, 'logger', module.exports);window.cordova = window.cordova || {};
+window.cordova.logger = window.cordova.logger || {};
+
+require('cordova/builder').assignOrWrapInDeprecateGetter(window.cordova, 'logger', module.exports);window.cordova = window.cordova || {};
+window.cordova.logger = window.cordova.logger || {};
+
 require('cordova/builder').assignOrWrapInDeprecateGetter(window.cordova, 'logger', module.exports);

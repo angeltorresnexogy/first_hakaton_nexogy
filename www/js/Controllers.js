@@ -30,9 +30,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       email: email,
       password: password
     }).then(function(authData) {
-
-        $state.go('app.home');
-
+      $state.go('app.home');
     }).catch(function(error) {
       $ionicPopup.alert({
         title: 'Authentication failed',
@@ -94,28 +92,34 @@ angular.module('Controllers', ['Security', 'Kandy'])
 })
     
 .controller('HomeController', function($scope, $stateParams, $state, $ionicHistory, $ionicModal, KandyManager, SecurityAuthFactory) {
-    
+
     SecurityAuthFactory.getUserAuth().then(function(data){
-
-        KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
-
-        KandyManager.logout();
+        // KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
+        //KandyManager.logout();
     
-        KandyManager.login(data.kandy.user_id, data.kandy.password);
+        //KandyManager.login(onLoginSuccess, onLoginFailed, data.kandy.user_id, data.kandy.password);
 
-        $state.go('app.home');
-    });
+        Kandy.access.login(function() {
+            console.log('akiiiiiiiiiiiii');
+                    }, function (e) {
+                     console.log('Errorororororororororororoorororororo');
+                     console.log(e);
+                     console.log('Errorororororororororororoorororororo');
+                    }, 
+                    data.kandy.user_id, data.kandy.password
+            );
+        });
 
     $scope.call_id = '';
 
     var onLoginSuccess = function(){
         console.log('logged');
-        KandyAPI.Phone.updatePresence(0); 
-        loadAddressBook();
+        // KandyAPI.Phone.updatePresence(0); 
+        // loadAddressBook();
 
-        setInterval(function(){
-            KandyManager.getIM(getIMSuccessCallback, getIMFailedCallback);
-        }, 1000); 
+        // setInterval(function(){
+        //     KandyManager.getIM(getIMSuccessCallback, getIMFailedCallback);
+        // }, 1000); 
     };
 
     var onLoginFailed = function(){

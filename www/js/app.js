@@ -8,7 +8,6 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
 
 .run(function($ionicPlatform, $rootScope, $state, SecurityAuthFactory, $ionicHistory) {
   $ionicPlatform.ready(function() {
-
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -44,8 +43,8 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
 
     });
 
-    console.log(Kandy);
-    console.log('ok');
+    Kandy.initialize();
+    console.log('Kandy initialized...');
 
   });
 })
@@ -133,3 +132,5 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
   $urlRouterProvider.otherwise('/app/login');
 
 });
+
+

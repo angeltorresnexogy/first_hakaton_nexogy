@@ -80,27 +80,45 @@ angular
 	//   }
 	// });
 
-	kandyServices.setup = function(outgoingVideo, incomingVideo, loginSuccessCallback, loginFailedCallback, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswer){
-							KandyAPI.Phone.setup({
-					          remoteVideoContainer: incomingVideo,
-					          localVideoContainer: outgoingVideo,
-							  listeners: {
-							    loginsuccess: loginSuccessCallback,
-							    loginfailed: loginFailedCallback,
+	// kandyServices.setup = function(outgoingVideo, incomingVideo, loginSuccessCallback, loginFailedCallback, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswer){
+	// 						KandyAPI.Phone.setup({
+	// 				          remoteVideoContainer: incomingVideo,
+	// 				          localVideoContainer: outgoingVideo,
+	// 						  listeners: {
+	// 						    loginsuccess: loginSuccessCallback,
+	// 						    loginfailed: loginFailedCallback,
 
-					            callinitiated: onCallInitiate,
-					            callinitiatefailed: onCallInitiateFail,
-					            oncall: onCall,
-					            callended: onCallTerminate,	
-            					callincoming: onCallIncoming,
-            					callanswered: onCallAnswer,            					
-							  }
-							});
-						}
+	// 				            callinitiated: onCallInitiate,
+	// 				            callinitiatefailed: onCallInitiateFail,
+	// 				            oncall: onCall,
+	// 				            callended: onCallTerminate,	
+ //            					callincoming: onCallIncoming,
+ //            					callanswered: onCallAnswer,            					
+	// 						  }
+	// 						});
+	// 					}
 
-	kandyServices.login = function(user_id, password){ KandyAPI.Phone.login( KANDY_DOMAIN_KEY, user_id, password); };
+	// kandyServices.login = function(user_id, password){ KandyAPI.Phone.login( KANDY_DOMAIN_KEY, user_id, password); };
 
-	kandyServices.logout = function(){ KandyAPI.Phone.logout(); }
+	kandyServices.login = function(successCallback, failedCallback, user_id, password){ 
+
+		Kandy.access.login(function() {
+						alert('aki');
+						successCallback(s);
+                    }, null,
+                    // function (e) {
+                    // 	console.log('aki2');
+                    //     failedCallback(e);
+                    // }, 
+                    user_id, password
+                );
+
+	};
+
+	// kandyServices.logout = function(){ KandyAPI.Phone.logout(); }
+	kandyServices.logout = function(){ 
+		Kandy.access.logout(); 
+	}	
 
 	kandyServices.makeCall = function(user_id, cameraOn){ KandyAPI.Phone.makeCall(user_id, cameraOn); }
 
