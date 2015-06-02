@@ -16,6 +16,13 @@
          specific language governing permissions and limitations
          under the License.
 -->
+Required Custom Framework
 
-# com.kandy.phonegap
-Plugin documentation: [doc/index.md](doc/index.md)
+KandySDK.framework
+MobileSDK.framework
+
+To get above Kandy native frameworks, 
+
+Step1. Download Kandy iOS SDK from http://gb-kandy-portal-shared.s3.amazonaws.com/downloads/iOSKandySDK_1.4.0.zip
+Step2. Extract it and you can find the both frameworks
+Step3. Place into this folder then add plugin into your project.

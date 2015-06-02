@@ -20,7 +20,7 @@
     "com.kandy.phonegap": {
         "source": {
             "type": "git",
-            "url": "https://github.com/Kandy-IO/kandy-phonegap.git",
+            "url": "https://github.com/Kandy-IO/PhoneGap-iOS.git",
             "subdir": "."
         }
     }

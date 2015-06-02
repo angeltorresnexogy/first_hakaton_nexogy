@@ -1,7 +1,6 @@
-
 "use strict";
 
-var exec = require('cordova/exec');
+var exec = cordova.require('cordova/exec');
 
 /**
  * Kandy PhoneGap Plugin interface.
@@ -121,8 +120,10 @@ var Kandy = {
 
     // Chat listeners
     onChatReceived: function (args) {
+      console.log("onChatReceived");
     },
     onChatDelivered: function (args) {
+      console.log("onChatDelivered");
     },
     onChatMediaAutoDownloadProgress: function (args) {
     },
@@ -807,10 +808,6 @@ var Kandy = {
         exec(success, error, "KandyPlugin", "setKey", [api, secret]);
     },
 
-    setHostUrl: function(success, error, url){
-        exec(success, error, "KandyPlugin", "setHostUrl", [url]);
-    },
-
     //*** PROVISIONING SERVICE ***//
     provisioning: {
 
@@ -898,16 +895,53 @@ var Kandy = {
     //*** CALL SERVICE ***//
     call: {
 
-        /**
-         * Create a voice call only.
-         *
-         * @param success The success callback function.
-         * @param error The error callback function.
-         * @param user The id of callee.
-         */
-        createVoiceCall: function (success, error, user) {
-            exec(success, error, "KandyPlugin", "createVoiceCall", [user]);
-        },
+      /**
+          * Show Local Video in given Dimension.
+          *
+          * @param success The success callback function.
+          * @param error The error callback function.
+          * @param xpos The co-ordinate of X position.
+          * @param ypos The co-ordinate of Y position.
+          * @param width The width of of Video that needs to show.
+          * @param width The height of of Video that needs to show
+          */
+         showLocalVideo: function (success, error, x, y, width, height) {
+             exec(success, error, "KandyPlugin", "showLocalVideo", [x, y, width, height]);
+         },
+
+         /**
+          * Show Remote Video in given Dimension.
+          *
+          * @param success The success callback function.
+          * @param error The error callback function.
+          * @param xpos The co-ordinate of X position.
+          * @param ypos The co-ordinate of Y position.
+          * @param width The width of of Video that needs to show.
+          * @param width The height of of Video that needs to show
+          */
+         showRemoteVideo: function (success, error, x, y, width, height) {
+             exec(success, error, "KandyPlugin", "showRemoteVideo", [x, y, width, height]);
+         },
+
+         /**
+          * Hide Local Video.
+          *
+          * @param success The success callback function.
+          * @param error The error callback function.
+          */
+          hideLocalVideo: function (success, error, user, startWithVideo) {
+             exec(success, error, "KandyPlugin", "hideLocalVideo", []);
+         },
+
+         /**
+          * Hide Local Video.
+          *
+          * @param success The success callback function.
+          * @param error The error callback function.
+          */
+          hideRemoteVideo: function (success, error, user, startWithVideo) {
+             exec(success, error, "KandyPlugin", "hideRemoteVideo", []);
+         },
 
         /**
          * Create a voip call.
@@ -1008,12 +1042,9 @@ var Kandy = {
          *
          * @param success The success callback function.
          * @param error The error callback function.
-         * @param videoEnabled Enable video call or not (use NativeView).
          */
-        accept: function (success, error, videoEnabled) {
-            if (videoEnabled == undefined) videoEnabled = false;
-            videoEnabled = videoEnabled ? 1 : 0;
-            exec(success, error, "KandyPlugin", "accept", [videoEnabled]);
+        accept: function (success, error) {
+            exec(success, error, "KandyPlugin", "accept", []);
         },
 
         /**
@@ -1323,7 +1354,29 @@ var Kandy = {
          */
         pullEvents: function (success, error) {
             exec(success, error, "KandyPlugin", "pullEvents", []);
+        },
+
+        /**
+         * Pull pending events from Kandy service.
+         *
+         * @param success The success callback function.
+         * @param error The error callback function.
+         * @param milliseconds schedule pull events in milliseconds.
+         */
+        startSchedulePullEvents: function (success, error, seconds) {
+            exec(success, error, "KandyPlugin", "startSchedulePullEvents", [seconds]);
+        },
+
+        /**
+         * Pull pending events from Kandy service.
+         *
+         * @param success The success callback function.
+         * @param error The error callback function.
+         */
+         stopSchedulePullEvents: function (success, error) {
+            exec(success, error, "KandyPlugin", "stopSchedulePullEvents", []);
         }
+
     },
 
     // *** GROUP SERVICE ***//
@@ -1615,3 +1668,10 @@ var Kandy = {
 };
 
 module.exports = Kandy;
+window.Kandy = window.Kandy || {};
+
+require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'Kandy', module.exports);window.Kandy = window.Kandy || {};
+
+require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'Kandy', module.exports);window.Kandy = window.Kandy || {};
+
+require('cordova/builder').assignOrWrapInDeprecateGetter(window, 'Kandy', module.exports);

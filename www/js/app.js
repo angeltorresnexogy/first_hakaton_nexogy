@@ -44,6 +44,9 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
 
     });
 
+    console.log(Kandy);
+    console.log('ok');
+
   });
 })
 
