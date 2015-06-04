@@ -37,7 +37,7 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
         }
         else if(SecurityAuthFactory.authObj().$getAuth() && toState.name == 'login'){
             event.preventDefault();
-            $state.go('app');
+            $state.go('app.home');
             console.log('as');
         }
     });
@@ -55,21 +55,25 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
               controller: 'AuthController'
           })
           .state('app', {
-              url: "/home",
-              // abstract: true,
+              url: "/app",
+              abstract: true,
               templateUrl: "templates/menu.html",
               controller: 'BaseController'
-            })          
-          // .state('app', {
-          //     url: "/home",
-          //     templateUrl: 'templates/menu.html',
-          //     controller: 'BaseController'
-          // })
+            })    
 
-         .state('app.receive_call', {
-              url: "/receive",
+          .state('app.home', {
+              url: "/home",
               views: {
                 'menuContent': {
+                  templateUrl: "templates/global.html",
+                  controller: 'BaseController'
+                }
+              }
+          })
+         .state('app.home.receive_call', {
+              url: "/receive",
+              views: {
+                'inception': {
                   templateUrl: "templates/pages/get_call.html",
                   controller: 'IncomingCallController'
                 }
@@ -86,10 +90,10 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
           //     controller: 'CallController'
           // }) 
 
-          .state('app.call', {
+          .state('app.home.call', {
               url: "/call",
               views: {
-                'menuContent': {
+                'inception': {
                   templateUrl: "templates/pages/call.html",
                   controller: 'CallController'
                 }

@@ -30,7 +30,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       password: password
     }).then(function(authData) {
 
-        $state.go('app');
+        $state.go('app.home');
 
     }).catch(function(error) {
 
@@ -101,7 +101,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       console.log('logged');
       $scope.login = 'logged';
 
-      $state.go('app.call'); 
+      $state.go('app.home.call'); 
       // $state.go('app.video');
       // KandyAPI.Phone.updatePresence(0); 
       // loadAddressBook();
@@ -143,7 +143,7 @@ angular.module('Controllers', ['Security', 'Kandy'])
       console.log(call.getId()); 
       $scope.call_id = call.getId();        
 
-      $state.go('app.receive_call');
+      $state.go('app.home.receive_call');
   };  
 
   var onCallAnswered = function(){
