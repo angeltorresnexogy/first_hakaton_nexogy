@@ -92,11 +92,28 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
   SecurityAuthFactory.getUserAuth().then(function(data){
 
-      KandyManager.setup(null, $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
+      //KandyManager.setup(null, $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
 
       // KandyManager.logout();
   
-      KandyManager.login(data.kandy.user_id, data.kandy.password);
+      //KandyManager.login(data.kandy.user_id, data.kandy.password);
+
+      Kandy.initialize({
+          widgets: {
+              call: "kandy-call-widget", // id call element
+          },
+          listeners: {
+              onIncomingCall: function(){
+                console.log('Incoming call');
+              },
+              onCallStateChanged: function(state){
+                console.log('Call State Changed: ' + state);
+              }
+          }
+      });
+
+      Kandy.access.login(onLoginSuccess, onLoginFailed, data.kandy.user_id + '@development.nexogy.com', data.kandy.password);
+
   });
 
   var onLoginSuccess = function(){
@@ -120,18 +137,6 @@ angular.module('Controllers', ['Security', 'Kandy'])
       console.log('log failed');
   };
 
-  var onCallInitiate = function(call){
-      console.log('call initiate');
-      console.log(call.getId());
-
-      // $scope.call_id = call.getId();
-      $rootScope.call_id = call.getId();        
-  };
-
-  var onCallInitiateFail  = function(){
-      console.log('call initiate failed');
-  };
-
   var onCall  = function(call){
       console.log('call started');
       console.log(call.getId()); 
@@ -140,16 +145,11 @@ angular.module('Controllers', ['Security', 'Kandy'])
       $audioRingOut[0].pause();
   };
 
-  var onCallTerminate  = function(){
-      console.log('call terminated');
-      $audioRingOut[0].pause();      
-  };
-
-  var onCallIncoming = function(call){
+  var onCallIncoming = function(id, callee, via){
       console.log('call incoming');
-      console.log(call.getId()); 
-      // $scope.call_id = call.getId();        
-      $rootScope.call_id = call.getId();
+      // console.log(call.getId()); 
+      // // $scope.call_id = call.getId();        
+      $rootScope.call_id = {id: id, callee: callee, via: via};
       $state.go('app.home.receive_call');
   };  
 
@@ -165,6 +165,8 @@ angular.module('Controllers', ['Security', 'Kandy'])
     $audioRingIn[0].play();
 
     $scope.answer_call = function(){
+
+      // {id: id, callee: callee, via: via}
       console.log($rootScope.call_id);//$scope.call_id);
       KandyManager.answerCall($rootScope.call_id);//$scope.call_id);
     };
@@ -173,10 +175,33 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
     $scope.init_call = function(){
       $audioRingOut[0].play();
-      KandyManager.makeCall('simplelogin40@development.nexogy.com', true);
+      // KandyManager.makeCall('simplelogin40@development.nexogy.com', true);
+      Kandy.call.createVoipCall(onCallInitiate, onCallInitiateFail, 'simplelogin42@development.nexogy.com', true);
     };
 
     $scope.end_call = function(){
-      KandyManager.endCall($rootScope.call_id);//$scope.call_id);
+      // KandyManager.endCall($rootScope.call_id);//$scope.call_id);
+      Kandy.call.hangup(onCallTerminate, onCallTerminateFail);
     }; 
+
+    var onCallTerminate  = function(){
+        console.log('call terminated');
+        $audioRingOut[0].pause();      
+    };
+    
+    var onCallTerminateFail  = function(errorMessage){
+        console.log('call terminated failed: ' + errorMessage);
+    };
+
+    var onCallInitiate = function(){
+        console.log('call initiate');
+        // console.log(call.getId());
+
+        // $scope.call_id = call.getId();
+        // $rootScope.call_id = call.getId();        
+    };
+
+    var onCallInitiateFail  = function(errorMessage){
+        console.log('call initiate failed: ' + errorMessage);
+    };
 });
