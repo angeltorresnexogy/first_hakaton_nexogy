@@ -82,11 +82,13 @@ angular.module('Controllers', ['Security', 'Kandy'])
   };
 })
 
-.controller('BaseController', function($scope, $state, SecurityAuthFactory, KandyManager) {
+.controller('BaseController', function($rootScope, $scope, $state, SecurityAuthFactory, KandyManager) {
 
 	$scope.hola = 'logged';
-  $scope.login = null;
-  $scope.call_id = null;
+  // $scope.login = '';
+  $rootScope.login = null;
+  $rootScope.call_id = null;  
+  // $scope.call_id = null;
 
   SecurityAuthFactory.getUserAuth().then(function(data){
 
@@ -99,9 +101,12 @@ angular.module('Controllers', ['Security', 'Kandy'])
 
   var onLoginSuccess = function(){
       console.log('logged');
-      $scope.login = 'logged';
+      // $scope.login = 'logged';
 
-      $state.go('app.home.call'); 
+      $rootScope.login = 'logged';
+      $state.go('app.home.call');
+
+      // $scope.$apply();      
       // $state.go('app.video');
       // KandyAPI.Phone.updatePresence(0); 
       // loadAddressBook();
@@ -119,7 +124,8 @@ angular.module('Controllers', ['Security', 'Kandy'])
       console.log('call initiate');
       console.log(call.getId());
 
-      $scope.call_id = call.getId();
+      // $scope.call_id = call.getId();
+      $rootScope.call_id = call.getId();        
   };
 
   var onCallInitiateFail  = function(){
@@ -129,7 +135,8 @@ angular.module('Controllers', ['Security', 'Kandy'])
   var onCall  = function(call){
       console.log('call started');
       console.log(call.getId()); 
-      $scope.call_id = call.getId();
+      // $scope.call_id = call.getId();
+      $rootScope.call_id = call.getId();      
       $audioRingOut[0].pause();
   };
 
@@ -141,8 +148,8 @@ angular.module('Controllers', ['Security', 'Kandy'])
   var onCallIncoming = function(call){
       console.log('call incoming');
       console.log(call.getId()); 
-      $scope.call_id = call.getId();        
-
+      // $scope.call_id = call.getId();        
+      $rootScope.call_id = call.getId();
       $state.go('app.home.receive_call');
   };  
 
@@ -153,15 +160,16 @@ angular.module('Controllers', ['Security', 'Kandy'])
   };
 
 })
-.controller('IncomingCallController', function($scope, $state, SecurityAuthFactory, KandyManager) {
+.controller('IncomingCallController', function($rootScope, $scope, $state, SecurityAuthFactory, KandyManager) {
 
     $audioRingIn[0].play();
 
     $scope.answer_call = function(){
-      KandyManager.answerCall($scope.call_id);
+      console.log($rootScope.call_id);//$scope.call_id);
+      KandyManager.answerCall($rootScope.call_id);//$scope.call_id);
     };
 })
-.controller('CallController', function($scope, $state, SecurityAuthFactory, KandyManager) {
+.controller('CallController', function($rootScope, $scope, $state, SecurityAuthFactory, KandyManager) {
 
     $scope.init_call = function(){
       $audioRingOut[0].play();
@@ -169,6 +177,6 @@ angular.module('Controllers', ['Security', 'Kandy'])
     };
 
     $scope.end_call = function(){
-      KandyManager.endCall($scope.call_id);
+      KandyManager.endCall($rootScope.call_id);//$scope.call_id);
     }; 
 });
