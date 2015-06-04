@@ -19,117 +19,162 @@ angular.module('starter', ['ionic', 'Controllers', 'Security', 'Kandy'])
       StatusBar.styleDefault();
     }
 
+    // SecurityAuthFactory.authObj().$unauth();  
+
     SecurityAuthFactory.authObj().$onAuth(function(authData) {
-         if(!authData){
-            $state.go('app.login');
-         }
+        if(!authData){
+            $state.go('login');
+        }
     });
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
 
-      $ionicHistory.nextViewOptions({
-        disableAnimate: true,
-        disableBack: true
-      });
-
-      if(!SecurityAuthFactory.authObj().$getAuth() && toState.name !== 'app.login') {
-          event.preventDefault();
-          console.log('no autenticado');
-          $state.go('app.login');
-      }
-      else if(SecurityAuthFactory.authObj().$getAuth() && toState.name == 'app.login'){
-        event.preventDefault();
-        $state.go('app.home');
-      }
-
+        console.log(toState.name);
+        if(!SecurityAuthFactory.authObj().$getAuth() && toState.name !== 'login') {
+            event.preventDefault();
+            console.log('no autenticado');
+            $state.go('login');
+        }
+        else if(SecurityAuthFactory.authObj().$getAuth() && toState.name == 'login'){
+            event.preventDefault();
+            $state.go('app');
+            console.log('as');
+        }
     });
-
-    console.log(Kandy);
-    console.log('ok');
 
   });
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
+
+    // Now set up the states
   $stateProvider
+          .state('login', {
+              url: "/login",
+              templateUrl: 'templates/User/login.html',
+              controller: 'AuthController'
+          })
+          .state('app', {
+              url: "/home",
+              // abstract: true,
+              templateUrl: "templates/menu.html",
+              controller: 'BaseController'
+            })          
+          // .state('app', {
+          //     url: "/home",
+          //     templateUrl: 'templates/menu.html',
+          //     controller: 'BaseController'
+          // })
 
-  .state('app', {
-    url: "/app",
-    abstract: true,
-    templateUrl: "templates/menu.html",
-    controller: 'BaseController'
-  })
+         .state('app.receive_call', {
+              url: "/receive",
+              views: {
+                'menuContent': {
+                  templateUrl: "templates/pages/get_call.html",
+                  controller: 'IncomingCallController'
+                }
+              }
+            })
+          // .state('app.receive_call', {
+          //     url: "/receive",
+          //     templateUrl: 'templates/pages/get_call.html',
+          //     controller: 'IncomingCallController'
+          // })     
+          // .state('app.call', {
+          //     url: "/call",             
+          //     templateUrl: 'templates/pages/call.html',
+          //     controller: 'CallController'
+          // }) 
 
-  .state('app.login', {
-    url: "/login",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/User/login.html",
-        controller: 'BaseController'
-      }
-    }
-  })
+          .state('app.call', {
+              url: "/call",
+              views: {
+                'menuContent': {
+                  templateUrl: "templates/pages/call.html",
+                  controller: 'CallController'
+                }
+              }
+            })
 
-  .state('app.home', {
-    url: "/home",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/home.html",
-        controller: 'HomeController'
-      }
-    }
-  })
+  // $stateProvider
 
-  .state('app.profile', {
-    url: "/profile",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/Profile/index.html",
-        controller: 'ProfileController'
-      }
-    }
-  })
+  // .state('app', {
+  //   url: "/app",
+  //   abstract: true,
+  //   templateUrl: "templates/menu.html",
+  //   controller: 'BaseController'
+  // })
 
-  .state('app.messages', {
-    url: "/messages",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/Message/index.html",
-        controller: 'MessageController'
-      }
-    }
-  })
+  // .state('app.login', {
+  //   url: "/login",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/User/login.html",
+  //       controller: 'BaseController'
+  //     }
+  //   }
+  // })
 
-  .state('app.message_compose', {
-    url: "/message/compose",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/Message/compose.html",
-        controller: 'MessageController'
-      }
-    }
-  })
+  // .state('app.home', {
+  //   url: "/home",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/home.html",
+  //       controller: 'HomeController'
+  //     }
+  //   }
+  // })
 
-  .state('app.playlists', {
-    url: "/playlists",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/playlists.html",
-        controller: 'PlaylistsCtrl'
-      }
-    }
-  })
+  // .state('app.profile', {
+  //   url: "/profile",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/Profile/index.html",
+  //       controller: 'ProfileController'
+  //     }
+  //   }
+  // })
 
-  .state('app.single', {
-    url: "/playlists/:playlistId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/playlist.html",
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
+  // .state('app.messages', {
+  //   url: "/messages",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/Message/index.html",
+  //       controller: 'MessageController'
+  //     }
+  //   }
+  // })
+
+  // .state('app.message_compose', {
+  //   url: "/message/compose",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/Message/compose.html",
+  //       controller: 'MessageController'
+  //     }
+  //   }
+  // })
+
+  // .state('app.playlists', {
+  //   url: "/playlists",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/playlists.html",
+  //       controller: 'PlaylistsCtrl'
+  //     }
+  //   }
+  // })
+
+  // .state('app.single', {
+  //   url: "/playlists/:playlistId",
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: "templates/playlist.html",
+  //       controller: 'PlaylistCtrl'
+  //     }
+  //   }
+  // });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  $urlRouterProvider.otherwise('/login');
 
 });

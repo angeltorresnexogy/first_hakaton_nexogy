@@ -108,10 +108,7 @@ angular
 
 	kandyServices.answerCall = function(callId){ KandyAPI.Phone.answerCall(callId, true); }
 
-	kandyServices.getAddressBook = function(successCallback){ KandyAPI.Phone.retrievePersonalAddressBook(successCallback); }
-
-	// kandyServices.createContact = function(successCallback){ KandyAPI.Phone.addToPersonalAddressBook(contactsObject, successCallback); }	
-	kandyServices.getDirectory = function(successCallback) { KandyAPI.Phone.searchDirectoryByUserName('', successCallback); }
+	kandyServices.getAddressBook = function(success){ KandyAPI.Phone.retrievePersonalAddressBook(success); }
 
 	kandyServices.sendIM = function(sendTo, content, type, successCallback, failedCallback){
 

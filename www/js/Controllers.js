@@ -1,18 +1,17 @@
 angular.module('Controllers', ['Security', 'Kandy'])
 
-.controller('BaseController', function($scope, $state, $ionicModal, $ionicPopup, SecurityAuthFactory, KandyManager) {
+.controller('AuthController', function($scope, $state, SecurityAuthFactory, KandyManager) {
+	//User login data
+	$scope.loginData = {};
 
-  //User login data
-  $scope.loginData = {};
-
-  //User register data
-  $scope.registerData = {
-    user: {
-      kandy: {
-        country_code: 'US',
-      }
-    }
-  };
+	//User register data
+	$scope.registerData = {
+		user: {
+			  kandy: {
+			    country_code: 'US',
+			  }
+		}
+	};
 
   //Flag to switch between form_login and register_login
   $scope.showLoginForm = true;
@@ -31,13 +30,15 @@ angular.module('Controllers', ['Security', 'Kandy'])
       password: password
     }).then(function(authData) {
 
-        $state.go('app.home');
+        $state.go('app');
 
     }).catch(function(error) {
-      $ionicPopup.alert({
-        title: 'Authentication failed',
-        template: 'Unknown username or wrong password'
-      });
+
+		alert('Unknown username or wrong password');
+      // $ionicPopup.alert({
+      //   title: 'Authentication failed',
+      //   template: 'Unknown username or wrong password'
+      // });      
     });
 
   }
@@ -70,234 +71,104 @@ angular.module('Controllers', ['Security', 'Kandy'])
       });
     }).catch(function(error) {
         console.log(error);
-        $ionicPopup.alert({
-          title: 'Registration failed',
-          template: 'Invalid arguments'
-        });
+
+        alert('Registration Failed');
+        // $ionicPopup.alert({
+        //   title: 'Registration failed',
+        //   template: 'Invalid arguments'
+        // });
     });
     
-  }
-
-  $scope.logout = function(){
-    KandyManager.logout();
-    SecurityAuthFactory.authObj().$unauth();
-  }
-
+  };
 })
 
-.controller('ProfileController', function($scope, $stateParams) {
-    
+.controller('BaseController', function($scope, $state, SecurityAuthFactory, KandyManager) {
+
+	$scope.hola = 'logged';
+  $scope.login = null;
+  $scope.call_id = null;
+
+  SecurityAuthFactory.getUserAuth().then(function(data){
+
+      KandyManager.setup(null, $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
+
+      // KandyManager.logout();
+  
+      KandyManager.login(data.kandy.user_id, data.kandy.password);
+  });
+
+  var onLoginSuccess = function(){
+      console.log('logged');
+      $scope.login = 'logged';
+
+      $state.go('app.call'); 
+      // $state.go('app.video');
+      // KandyAPI.Phone.updatePresence(0); 
+      // loadAddressBook();
+
+      // setInterval(function(){
+      //     KandyManager.getIM(getIMSuccessCallback, getIMFailedCallback);
+      // }, 1000); 
+  };
+
+  var onLoginFailed = function(){
+      console.log('log failed');
+  };
+
+  var onCallInitiate = function(call){
+      console.log('call initiate');
+      console.log(call.getId());
+
+      $scope.call_id = call.getId();
+  };
+
+  var onCallInitiateFail  = function(){
+      console.log('call initiate failed');
+  };
+
+  var onCall  = function(call){
+      console.log('call started');
+      console.log(call.getId()); 
+      $scope.call_id = call.getId();
+      $audioRingOut[0].pause();
+  };
+
+  var onCallTerminate  = function(){
+      console.log('call terminated');
+      $audioRingOut[0].pause();      
+  };
+
+  var onCallIncoming = function(call){
+      console.log('call incoming');
+      console.log(call.getId()); 
+      $scope.call_id = call.getId();        
+
+      $state.go('app.receive_call');
+  };  
+
+  var onCallAnswered = function(){
+      console.log('call answered');
+      $audioRingIn[0].pause();      
+      $audioRingOut[0].pause();         
+  };
+
 })
+.controller('IncomingCallController', function($scope, $state, SecurityAuthFactory, KandyManager) {
 
-.controller('MessageController', function($scope, $stateParams) {
-
-})
-    
-.controller('HomeController', function($scope, $stateParams, $state, $ionicHistory, $ionicModal, KandyManager, SecurityAuthFactory) {
-    
-    SecurityAuthFactory.getUserAuth().then(function(data){
-
-        KandyManager.setup($('#outgoing-video')[0], $('#incoming-video')[0], onLoginSuccess, onLoginFailed, onCallInitiate, onCallInitiateFail, onCall, onCallTerminate, onCallIncoming, onCallAnswered);
-
-        KandyManager.logout();
-    
-        KandyManager.login(data.kandy.user_id, data.kandy.password);
-
-        $state.go('app.home');
-    });
-
-    $scope.call_id = '';
-
-    var onLoginSuccess = function(){
-        console.log('logged');
-        KandyAPI.Phone.updatePresence(0); 
-        loadAddressBook();
-
-        setInterval(function(){
-            KandyManager.getIM(getIMSuccessCallback, getIMFailedCallback);
-        }, 1000); 
-    };
-
-    var onLoginFailed = function(){
-        console.log('log failed');
-    };
-
-    var onCallInitiate = function(call){
-        console.log('call initiate');
-        console.log(call.getId());
-        $scope.call_id = call.getId();
-        $audioRingOut[0].play();
-    };
-
-    var onCallInitiateFail  = function(){
-        console.log('call initiate failed');
-    };
-
-    var onCall  = function(call){
-        console.log('call started');
-        console.log(call.getId()); 
-        $scope.call_id = call.getId();
-        $audioRingOut[0].pause();
-    };
-
-    var onCallTerminate  = function(){
-        console.log('call terminated');
-        $audioRingOut[0].pause();      
-    };
-
-    var onCallIncoming = function(call){
-        console.log('call incoming');
-        console.log(call.getId()); 
-        $scope.call_id = call.getId();        
-        $audioRingIn[0].play();      
-    };  
-
-    var onCallAnswered = function(){
-        console.log('call answered');
-        $audioRingIn[0].pause();      
-        $audioRingOut[0].pause();         
-    };     
-
-    var loadAddressBook = function(){
-        KandyManager.getAddressBook(addressBookCallback);  
-    }
-
-    var addressBookCallback = function(data){
-        $scope.addressBook = data;
-    };
-
-    $scope.showContactModal = function(){
-
-      $scope.newContactData = {};
-
-      $ionicModal.fromTemplateUrl('templates/Contact/add_contact_modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function(modal) {
-        $scope.modal = modal;
-        $scope.modal.show();
-      });
-
-      $scope.closeContactModal = function() {
-        $scope.modal.hide();
-      };
-
-      //Cleanup the modal when we're done with it!
-      $scope.$on('$destroy', function() {
-        $scope.modal.remove();
-      });
-
-      // Execute action on hide modal
-      $scope.$on('modal.hidden', function() {
-        // Execute action
-      });
-      // Execute action on remove modal
-      $scope.$on('modal.removed', function() {
-        // Execute action
-      });
-    };
-
-    $scope.saveContact  = function(){
-      console.log($scope.newContactData);
-    }
-
-    $scope.init_call = function(){
-      KandyManager.makeCall('simplelogin41@development.nexogy.com', true);
-    };
-
-    $scope.end_call = function(){
-      KandyManager.endCall($scope.call_id);
-    };    
+    $audioRingIn[0].play();
 
     $scope.answer_call = function(){
       KandyManager.answerCall($scope.call_id);
     };
-
-    $scope.messages = [];
-
-    var sendIMSuccessCallback = function(data){
-
-        $scope.messages.push({ sender: 'Me', text: data.message.text, ack: 0, uuid: data.UUID });
-        $scope.$apply();
-        console.log('message sent');
-    };
-
-    var sendIMFailedCallback = function(){
-        console.log('message failed');
-    };    
-
-    var getIMSuccessCallback = function(data){
-
-        if(data.messages.length > 0)
-        {
-          data.messages.forEach(function(msg){
-            
-            if(msg.messageType == 'chatRemoteAck')
-            {                        
-              var BreakException= {};
-
-              try {
-                  $scope.messages.forEach(function(elem) {
-                      if(elem.ack == 0) 
-                      {
-                        elem.ack = 1;
-                        throw BreakException;
-                      }
-                  });
-              } catch(e) {
-                  if (e!==BreakException) throw e;
-              }  
-                      
-              $scope.$apply();
-
-              console.log('message reception confirmed');
-            }
-            else
-            {
-              $scope.messages.push({ sender: msg.sender.user_id, text: msg.message.text, ack: 0 });
-              $scope.$apply();                
-              console.log('message received'); 
-            }          
-          });        
-        }
-    };
-
-    var getIMFailedCallback = function(){
-        console.log('message load failed');
-    };    
-
-    $scope.message = '';
-
-    $scope.send_im = function(content, type){ 
-
-      $scope.message = '';      
-      switch(type)
-      {  
-        case 'text': KandyManager.sendIM('simplelogin40@development.nexogy.com', content, 'text', sendIMSuccessCallback, sendIMFailedCallback); 
-                     break;
-      }
-    };
-
-    $scope.uploadImage = function(event){
-      console.log(event);
-    }
 })
+.controller('CallController', function($scope, $state, SecurityAuthFactory, KandyManager) {
 
-.controller('PlaylistsCtrl', function($scope, SecurityAuthFactory, $firebaseArray) {
-  $scope.messages = $firebaseArray(SecurityAuthFactory.managerFB().$ref().child('messages'));
+    $scope.init_call = function(){
+      $audioRingOut[0].play();
+      KandyManager.makeCall('simplelogin40@development.nexogy.com', true);
+    };
 
-  $scope.messages.$loaded()
-    .then(function(data) {
-      $scope.messages = data; // true
-  })
-  .catch(function(error) {
-    console.log("Error:", error);
-  });
-
-  messagesRef.$watch(function() {
-      console.log("data changed!");
-  });
-
-})
-
-
+    $scope.end_call = function(){
+      KandyManager.endCall($scope.call_id);
+    }; 
+});
